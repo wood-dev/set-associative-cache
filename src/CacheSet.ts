@@ -25,7 +25,7 @@ class CacheSet<Key extends string | number, Value> {
     }
 
     // store data: update timestamp if exists; insert to empty line or victim line based on replacement policy
-    store(tag: Key, data: Value) {
+    store(tag: Key, data: Value | null) {
 
         let line = this.load(tag);
 
@@ -43,6 +43,7 @@ class CacheSet<Key extends string | number, Value> {
         }
     }
 
+    // set invalid 
     invalidate(tag: Key): boolean {
         let line = this.load(tag);
         if (line) {
@@ -51,4 +52,11 @@ class CacheSet<Key extends string | number, Value> {
         } else
             return false;
     }
+
+    public loadAll(): { key: Key; value: Value | null}[] {
+        return this.lines
+            .filter(line => line.valid)         // valid only 
+            .map(line =>({ key: line.tag!, value: line.data }));       // putting ! as key cannot be null 
+    }
+
 }
