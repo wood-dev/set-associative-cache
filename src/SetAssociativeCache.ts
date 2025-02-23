@@ -1,4 +1,6 @@
-class SetAssociativeCache<Key extends string | number, Value> {
+import { CacheSet } from "./CacheSet";
+
+export class SetAssociativeCache<Key extends string | number, Value> {
 
     sets: CacheSet<Key, Value>[];
     numberOfSets: number;
@@ -11,12 +13,12 @@ class SetAssociativeCache<Key extends string | number, Value> {
 
     // hash function to identify a specific set 
     private getSetIndex(key: Key): number {
-        const x = 1.618;
-        return Number(key) * x % this.numberOfSets;           // even distribution
+        const x = 1.618;        
+        return (Number(key) * x | 0) % this.numberOfSets;           // even distribution with integer index
     }
 
     // put value with specific key
-    put(key: Key, value: Value | null) {
+    put(key: Key, value: Value | null) {        
         this.sets[this.getSetIndex(key)].store(key, value);
     }
 

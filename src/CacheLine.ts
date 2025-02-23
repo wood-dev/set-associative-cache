@@ -4,7 +4,7 @@
  */
 
 
-class CacheLine<Key extends string | number, Value> {
+export class CacheLine<Key extends string | number, Value> {
 
     tag: Key ;        // memory block tag
     data: Value | null;     // data

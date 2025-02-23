@@ -1,9 +1,11 @@
+import { CacheLine } from "../src/CacheLine";
+
 /**
  * Set – A group of N lines. 
  * The number of lines in a set is N 
  */
 
-class CacheSet<Key extends string | number, Value> {
+export class CacheSet<Key extends string | number, Value> {
 
     lines: CacheLine<Key, Value>[];
     associativity: number;
@@ -26,7 +28,7 @@ class CacheSet<Key extends string | number, Value> {
 
     // store data: update timestamp if exists; insert to empty line or victim line based on replacement policy
     store(tag: Key, data: Value | null) {
-
+        
         let line = this.load(tag);
 
         if (line)
