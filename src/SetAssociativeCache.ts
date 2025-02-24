@@ -11,10 +11,23 @@ export class SetAssociativeCache<Key extends string | number, Value> {
         this.sets = Array.from({ length: numberOfSets }, () => new CacheSet<Key, Value>(associativity));
     }
 
+    private hashKey(input: number | string) : number {
+        if (typeof input == "number"){
+            const x = 1.618; 
+            return (Number(input) * x | 0) % this.numberOfSets;
+        } else {
+            let hash = 0;
+            for (let i = 0; i < input.length; i++) {
+                hash = hash * 31 + input.charCodeAt(i);
+            }
+            return (hash >>> 0) % this.numberOfSets;    // positive 
+        }
+    }
+
     // hash function to identify a specific set 
     private getSetIndex(key: Key): number {
-        const x = 1.618; 
-        return (Number(key) * x | 0) % this.numberOfSets;           // even distribution with integer index
+        let index = this.hashKey(key);
+        return index;
     }
 
     // put value with specific key
