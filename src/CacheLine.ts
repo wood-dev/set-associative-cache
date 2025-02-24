@@ -23,6 +23,7 @@ export class CacheLine<Key extends string | number, Value> {
         this.data = data;
         this.valid = true;
         this.lastAccessed = currentTime;
+        this.delay(1);     // adding a small delay so data saving is not happening at the same time, this is to verify replacement policy 
     }
 
     // invalidate the cache line
@@ -30,4 +31,9 @@ export class CacheLine<Key extends string | number, Value> {
         this.data = null;
         this.valid = false;
     }
+
+    async delay(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
 }

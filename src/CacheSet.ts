@@ -28,7 +28,7 @@ export class CacheSet<Key extends string | number, Value> {
 
     // store data: update timestamp if exists; insert to empty line or victim line based on replacement policy
     store(tag: Key, data: Value | null) {
-        
+
         let line = this.load(tag);
 
         if (line)
