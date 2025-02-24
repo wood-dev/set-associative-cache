@@ -1,4 +1,5 @@
 import { CacheLine } from "../src/CacheLine";
+import { ReplacementPolicy } from "./SetAssociativeCache";
 
 /**
  * Set – A group of N lines. 
@@ -9,11 +10,13 @@ export class CacheSet<Key extends string | number, Value> {
 
     lines: CacheLine<Key, Value>[];
     associativity: number;
+    policy: ReplacementPolicy;
 
     // create set with N lines 
-    constructor(associativity: number) {
+    constructor(associativity: number, policy: ReplacementPolicy) {
         this.associativity = associativity;
         this.lines = Array.from({ length: associativity }, () => new CacheLine<Key, Value>());
+        this.policy = policy;
     }
 
     // load data with given key
@@ -34,15 +37,30 @@ export class CacheSet<Key extends string | number, Value> {
         if (line)
             line.store(tag, data, Date.now());        // update line if found
         else {
-
             let emptyLine = this.lines.find(line => !line.valid);       // find empty line
             if (emptyLine)
                 emptyLine.store(tag, data, Date.now())
             else {
-                let victimLine = this.lines.reduce((l1, l2) => (l1.lastAccessed < l2.lastAccessed ? l1 : l2));      // Least Recent Use: finding the oldest
+                let victimLine = this.getVictimLine();
                 victimLine.store(tag, data, Date.now())
             }
         }
+    }
+
+    getVictimLine(){
+        let victimLine;
+        switch (this.policy) {
+            case ReplacementPolicy.LRU:
+                victimLine = this.lines.reduce((l1, l2) => (l1.lastAccessed < l2.lastAccessed ? l1 : l2));      // find the oldest
+                break;
+            case ReplacementPolicy.MRU:
+                victimLine = this.lines.reduce((l1, l2) => (l1.lastAccessed > l2.lastAccessed ? l1 : l2));      // find the newest
+                break;
+            default:
+                victimLine = this.lines.reduce((l1, l2) => (l1.lastAccessed < l2.lastAccessed ? l1 : l2));      // default as LRU
+                break;
+        }
+        return victimLine;
     }
 
     // set invalid 
