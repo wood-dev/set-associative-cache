@@ -1,14 +1,16 @@
 {
   "name": "set-associative-cache",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "N-Way Set Associative Cache",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "jest --watch",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
